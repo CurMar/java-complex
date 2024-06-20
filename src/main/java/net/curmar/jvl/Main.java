@@ -1,9 +1,19 @@
 package net.curmar.jvl;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Comparator;
 
-class Enemy implements Comparable<Enemy> {
+class EnemyComparator implements Comparator<Enemy> {
+
+    public static final EnemyComparator INSTANCE = new EnemyComparator();
+
+    @Override
+    public int compare(Enemy a, Enemy b) {
+        return (100 * a.damage + 10 * a.health + a.protection) - (100 * b.damage + 10 * b.health + b.protection);
+    }
+}
+
+class Enemy {
 
     public int damage, health, protection;
 
@@ -12,23 +22,17 @@ class Enemy implements Comparable<Enemy> {
         health = b;
         protection = c;
     }
-
-    @Override
-    public int compareTo(Enemy e) {
-        return (100 * damage + 10 * health + protection) - (100 * e.damage + 10 * e.health + e.protection);
-    }
 }
 
 
 public class Main {
-
 
     public static void main(String[] args) {
         ArrayList<Enemy> a = new ArrayList<>();
         a.add(new Enemy(5, 3, 1));
         a.add(new Enemy(9, 9, 1));
         a.add(new Enemy(5, 2, 1));
-        Collections.sort(a);
+        a.sort(EnemyComparator.INSTANCE);
         for (Enemy e : a)
             System.out.println(e.health);
     }
